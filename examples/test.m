@@ -7,7 +7,7 @@ Q  = diag([0, 0.05^2]);
 R  = 0.1^2;
 
 %% Filter initiation
-t_vec = linspace(0, 10, 1e2)';
+t_vec = linspace(0, 20, 1e2)';
 X_GT  = groundTruth(t_vec, [0; 1]);
 X0    = rand(2, 1);
 P0    = diag([1, 1]);
@@ -24,18 +24,23 @@ ekf.estimate(t_vec, X0, P0);
 
 
 %% Visualization
-opts = {'OneAxis', false, 'showpatch', true, 'ylabel', {'Position', 'Velocity'}, 'ylim', []};
+opts = {'OneAxis', false, 'showpatch', true, 'ylabel', {'$\Delta$ Position', '$\Delta$ Velocity'}, 'ylim', []};
 ekf.plot_err(1:2, t_vec, opts, '*', 'MarkerSize', 5);
+print('./postProcessing/Error', '-dpng');
 
-opts = {'OneAxis', true, 'legend', {'Position', 'Velocity'}, 'ylim', []};
+opts = {'OneAxis', true, 'legend', {'Position', 'Velocity'}, 'ylim', [], 'pltGT', true};
 ekf.plot_states(1:2, t_vec, opts, 'LineWidth', 1.5)
+print('./postProcessing/States', '-dpng');
 
-opts = {'OneAxis', false, 'ylabel', {'Position', 'Velocity'}, 'ylim', []};
+
+opts = {'OneAxis', false, 'ylabel', {'$\sigma_{pos}$', '$\sigma_{vel}$'}, 'ylim', []};
 ekf.plot_est_sd(1:2, t_vec, opts, '.')
+print('./postProcessing/StanderdDeviation', '-dpng');
 
 
 opts = {'ylabel', {'Custom'}, 'ylim', [-2, 2]};
 ekf.plot_custom(@custom_fun, t_vec, opts, '-r', 'LineWidth', 1.5)
+print('./postProcessing/CustomFunction', '-dpng');
 
 
 function out = custom_fun(obj)

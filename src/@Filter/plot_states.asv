@@ -15,8 +15,7 @@ function [] = plot_states(obj, states, x_vec, opts, varargin)
 %             the ylabels for the subplots or the legends for lines on one 
 %             axis or the legends for
 %           - ylim, value (array): specifies the ylim of the axis/axes.
-%           - pltGT, value (boolean): specifies wether to plot the ground
-%             truth alongside the states or not.
+%           - pltGT, value (boolean): specifies the ylim of the axis/axes.
 %       
 %   - varargin: (optional) plot options (e.g 'LineWidth', 1.5)
 %
