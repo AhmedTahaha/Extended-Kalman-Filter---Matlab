@@ -10,5 +10,5 @@ end
 function dX = dynamics(t, X)
     dX = nan(size(X));
     dX(1) = X(2);
-    dX(2) = -sin(t) + normrnd(0, 0.05);
+    dX(2) = -sin(t);
 end
