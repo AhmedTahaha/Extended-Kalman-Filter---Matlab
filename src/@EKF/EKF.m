@@ -1,4 +1,4 @@
-classdef EKF < handle
+classdef EKF < Filter
     % EKF is an Extended Kalman Filter class which is able to estimate the
     % states using the Extended Kalman Filter algorithm. It also provides
     % some visualization features.
@@ -6,18 +6,11 @@ classdef EKF < handle
     % Copyrights: Ahmed Mahfouz 2021, University of Luxembourg.
     
     properties
-        n_st        % number of states
-        t           % time vector
-        Y           % state variavles
         z           % measurements
-        Y_GT        % Ground truth of the state variables (n_stxM vector)
         P           % Estimation covariance matrix
-        Q           % state model covariance matrix
-        R           % measurements covariance matrix
         st_model    % state model
         meas_model  % measurement model
         meas        % A function that produces the measurements at any time
-        waitbar     % A boolean indicating whether to show a waitbar or not
         aux_pred    % Auxiliary function to be run after the prediction step
         aux_corr    % Auxiliary function to be run after the correction step
     end
@@ -55,17 +48,7 @@ classdef EKF < handle
             obj.aux_pred   = @(Y_pred, P_pred) obj.nochange(Y_pred, P_pred);
             obj.aux_corr   = @(Y_corr, P_corr) obj.nochange(Y_corr, P_corr);
         end
-        
-        function set.Y_GT(EKF, Y_GT)
-            validateattributes(Y_GT, { 'numeric' }, {'size', [EKF.n_st, nan]});
-            EKF.Y_GT = Y_GT;
-        end
-        
-        function set.waitbar(EKF, waitbar)
-            validateattributes(waitbar, {'logical'}, {});
-            EKF.waitbar = waitbar;
-        end
-        
+                
         function set.aux_pred(EKF, aux_pred)
             validateattributes(aux_pred, {'function_handle'}, {});
             EKF.aux_pred = aux_pred;
@@ -77,11 +60,6 @@ classdef EKF < handle
         end
         
         EKF         = estimate(EKF, t_vec, Y0, P0);
-        [fig, axes] = plot_states(EKF, states, x_vec, oneGraph, varargin);
-        [fig, axes] = plot_err(EKF, states, x_vec, oneGraph, varargin);
-        [fig, axes] = plot_est_sd(EKF, states, x_vec, oneGraph, varargin);
-        [fig, ax]   = plot_custom(EKF, fun, x_vec, ylabel, varargin)
-        [fig, axes] = plot_err_xyz(EKF, states, x_vec, oneAxis, varargin)
     end
     
     methods (Access=private, Static)

@@ -31,17 +31,20 @@ for i = 2:n_total
     else
         error('EKF.Q must be either a constant matrix or a callable(t, Y)');
     end
-    P_pred = Phi * EKF.P(:, :, i-1) * Phi' + Q;
+    P_pred = Phi * EKF.P(:, :, i-1) * Phi';
     [Y_pred, P_pred] = EKF.aux_pred(Y_pred, P_pred);
-    
+    P_pred = P_pred + Q;
+
     % Correction
     z               = EKF.meas(t);
     EKF.z{i}        = z;
+%     EKF.aux.n_PRN   = length(z.SDCP.PRN);
     if isempty(z)
         EKF.Y(:, i)     = Y_pred;
         EKF.P(:, :, i)  = P_pred;
     else
         [h, H, z] = EKF.meas_model(t, Y_pred, P_pred, z);
+
         if isa(EKF.R, 'function_handle')
             R = EKF.R(t, z);
         elseif isa(EKF.R, 'double')
@@ -49,13 +52,11 @@ for i = 2:n_total
         else
             error('EKF.R must be either a constant matrix or a callable(t, z)');
         end
-%         if i > 20
-%             S              = H * P_pred * H' + R;
-%             [h, H, z, R] = chi2RemoveOutliers(z, h, H, S, R);
-%         end
+        S                   = H * P_pred * H' + R;
+%         [meas_res, S, H] = chi2RemoveOutliers(z, h, H, S, R, P_pred);
         meas_res  = z - h;
-        S                = H * P_pred * H' + R;
-        K                = P_pred * H' /S;
+        
+        K                = P_pred * H' / S;
         Y_corr           = Y_pred + K * meas_res;
         P_corr           = (eye(EKF.n_st) - K*H) * P_pred;
         [Y_corr, P_corr] = EKF.aux_corr(Y_corr, P_corr);
