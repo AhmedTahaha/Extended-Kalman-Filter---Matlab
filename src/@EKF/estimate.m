@@ -38,7 +38,6 @@ for i = 2:n_total
     % Correction
     z               = EKF.meas(t);
     EKF.z{i}        = z;
-%     EKF.aux.n_PRN   = length(z.SDCP.PRN);
     if isempty(z)
         EKF.Y(:, i)     = Y_pred;
         EKF.P(:, :, i)  = P_pred;
@@ -53,7 +52,6 @@ for i = 2:n_total
             error('EKF.R must be either a constant matrix or a callable(t, z)');
         end
         S                   = H * P_pred * H' + R;
-%         [meas_res, S, H] = chi2RemoveOutliers(z, h, H, S, R, P_pred);
         meas_res  = z - h;
         
         K                = P_pred * H' / S;

@@ -18,7 +18,7 @@ for i = 1:length(opts)
         elseif strcmpi(opts{i}, 'ylim')
                 ylims = opts{i+1};
         else
-            error(['Unvalid option ', opts{i}, ' for plot_custom'])
+            warning(['Invalid option ', opts{i}, ' for plot_custom'])
         end
     end
 end
@@ -41,8 +41,8 @@ end
 grid on;
 box on;
 obj.set_datetimeTicks(gca, x_vec);
-[~, RMS, ~, conv_time] = obj.set_ylim(x_vec, y_vec, 0, ylims);
+[~, RMS, ~, ~, conv_i] = obj.set_ylim(x_vec, y_vec, 0, ylims);
 
-title(sprintf('RMS = %4.2f, and the filter converges after %d iterations', RMS, conv_time));
+title(sprintf('RMS = %4.2f, and the filter converges after %d iterations', RMS, conv_i));
 
 end

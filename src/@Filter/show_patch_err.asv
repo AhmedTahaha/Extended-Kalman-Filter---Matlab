@@ -6,7 +6,7 @@ Pi(Pi<0)  = P_;
 sigma_est = sqrt(Pi);
 
 sigma_est = sigma_est(:)';
-x_vec     = x_vec(:)';
+sigma_est = x(:)';
 
 
 if ptch

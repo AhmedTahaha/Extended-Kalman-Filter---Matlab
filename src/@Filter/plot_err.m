@@ -27,7 +27,7 @@ for i = 1:length(opts)
         elseif strcmpi(opts{i}, 'showpatch')
                 showPatch = opts{i+1};
         else
-            error(['Unvalid option ', opts{i}, ' for plot_err'])
+            warning(['Invalid option ', opts{i}, ' for plot_err'])
         end
     end
 end
@@ -80,7 +80,7 @@ else
             ylabel(['Error in state ', num2str(states(i))], 'interpreter', 'latex');
         else
             if length(ylabels)~=n_states
-                error('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
+                warning('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
             else
                 ylabel(ylabels{i}, 'interpreter', 'latex');
             end

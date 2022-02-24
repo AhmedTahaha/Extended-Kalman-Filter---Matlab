@@ -25,7 +25,7 @@ for i = 1:length(opts)
         elseif strcmpi(opts{i}, 'oneaxis')
                 oneAxis = opts{i+1};
         else
-            error(['Unvalid option ', opts{i}, ' for plot_est_sd'])
+            warning(['Invalid option ', opts{i}, ' for plot_est_sd'])
         end
     end
 end
@@ -46,7 +46,7 @@ if oneAxis
             legends{i} = ['$\sigma_{', num2str(states(i)), '}$'];
         else
             if length(ylabels)~=n_states
-                error('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
+                warning('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
             else
                 legends{i} = ylabels{i};
             end
@@ -84,7 +84,7 @@ else
             ylabel(['$\sigma_{', num2str(states(i)), '}$'], 'interpreter', 'latex');
         else
             if length(ylabels)~=n_states
-                error('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
+                warning('YLABELS is a cell array that contains the ylabels of each axis. length(ylabels) must equal the numebr of states to be plotted.')
             else
                 ylabel(ylabels{i}, 'interpreter', 'latex');
             end

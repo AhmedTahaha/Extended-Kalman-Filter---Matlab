@@ -36,7 +36,7 @@ classdef Filter < handle
     
     methods(Access=private, Static)
         set_datetimeTicks(axis, x_vec);
-        [av, RMS, perc, conv_time] = set_ylim(x_vec, y_vec, sigma_est, ylims);
+        [av, RMS, perc, conv_time, conv_i] = set_ylim(x_vec, y_vec, sigma_est, ylims);
         sigma_est = show_patch_err(P, x_vec, ptch);
         sigma_est = show_patch_states(P, x_vec, y_vec, clr)
     end

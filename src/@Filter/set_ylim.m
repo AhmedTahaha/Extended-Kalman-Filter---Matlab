@@ -1,17 +1,17 @@
-function [av, RMS, prc, conv_time] = set_ylim(x_vec, y_vec, sigma_est, ylims)
+function [av, RMS, prc, conv_time, conv_i] = set_ylim(x_vec, y_vec, sigma_est, ylims)
 
-i_conv = floor(length(y_vec)/5);
-RMS    = sqrt(mean(y_vec(i_conv:end).^2));
-i_conv = get_iconv(y_vec, RMS, 100);
-av     = mean(y_vec(i_conv:end));
-sigma  = std(y_vec(i_conv:end));
-RMS    = sqrt(mean(y_vec(i_conv:end).^2));
+conv_i = floor(length(y_vec)/5);
+RMS    = sqrt(mean(y_vec(conv_i:end).^2));
+conv_i = get_iconv(y_vec, RMS, 100);
+av     = mean(y_vec(conv_i:end));
+sigma  = std(y_vec(conv_i:end));
+RMS    = sqrt(mean(y_vec(conv_i:end).^2));
 
 
 if nargout > 2
     prc = sum(abs(y_vec) <= 3*sigma_est)/length(y_vec)*100;
     if nargout > 3
-        conv_time = x_vec(i_conv);
+        conv_time = x_vec(conv_i);
         if isdatetime(conv_time)
             conv_time = seconds(conv_time - x_vec(1));
         else
