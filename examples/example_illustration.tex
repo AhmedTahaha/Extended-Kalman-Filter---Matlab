@@ -1,0 +1,103 @@
+%% LyX 2.3.6.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amssymb}
+\usepackage{babel}
+\begin{document}
+
+\section{EKF in a nutshell}
+
+Extended Kalman Filter (EKF) is an modification of the well known
+Kalman Filter for the case of nonlinear dynamics. The Kalman Filter
+itself is an optimal state estimation algorithm for linear dynamics
+and measurement models which experience zero-mean Gaussian noise.
+In the EKF context however, neither the dynamical model nor the measurement
+model have to be linear, nonetheless, linearized dynamics and measurements
+models are still required within the filter. One dynamical system
+can be described as follows:
+
+\begin{equation}
+\dot{{\bf x}}=f(t,{\bf x})+{\bf w}
+\end{equation}
+
+in which the function $f:\mathbb{R}\times\mathbb{R}^{n}\rightarrow\mathbb{R}^{n}$
+and ${\bf w}$ is a vector of $n$ normally distributed random variables
+with zero mean and a covariance matrix ${\bf Q}$. The same system
+can be written in discrete time as:
+
+\begin{equation}
+{\bf x}_{k+1}={\bf F}(t_{k},t_{k+1},{\bf x}){\bf x}+{\bf w}_{k}
+\end{equation}
+
+where ${\bf F}:\mathbb{R}\times\mathbb{R}\times\mathbb{R}^{n}\rightarrow\mathbb{R}^{n\times n}$is
+the state transition matrix. A first order approximation of the state
+transition matrix is found below:
+
+\begin{equation}
+{\bf F}(t_{k},t_{k+1},{\bf x})={\bf I}+\frac{\partial f(t,{\bf x})}{\partial t}\cdot(t_{k}-t_{k+1})\label{eq:STM}
+\end{equation}
+
+The measurements are modeled as follows:
+
+\begin{equation}
+{\bf z}=h(t,{\bf x})+{\bf v}
+\end{equation}
+
+in which the function $h:\mathbb{R}\times\mathbb{R}^{n}\rightarrow\mathbb{R}^{m}$
+and ${\bf v}$ is a vector of $m$ normally distributed random variables
+with zero mean and a covariance matrix ${\bf R}$. One other important
+matrix that needs to be available for the EKF algorithm is the $H(t,{\bf x})=\frac{\partial h(t,{\bf x})}{\partial t}$.
+
+\section{Example details}
+
+In the context of this example, the position and velocity of a vehicle
+moving along a line are to be estimated. The linear acceleration of
+the system is modeled follows:
+
+\begin{equation}
+\ddot{x}=-\sin(t)\label{eq:dynamics}
+\end{equation}
+
+letting $x_{1}=x$ and $x_{2}=\dot{x}$, the dynamical model can be
+written as:
+
+\begin{equation}
+\left[\begin{array}{c}
+\dot{x_{1}}\\
+\dot{x_{2}}
+\end{array}\right]=\left[\begin{array}{c}
+x_{2}\\
+-\sin(t)
+\end{array}\right]
+\end{equation}
+
+The state transition matrix of the system is written according to
+the approximation in (\ref{eq:STM}) as:
+
+\begin{equation}
+{\bf F}(t_{k},t_{k+1},{\bf x})=\left[\begin{array}{cc}
+1 & t_{k}-t_{k+1}\\
+0 & 1
+\end{array}\right]
+\end{equation}
+
+The system is assumed to measure only the position of the vehicle,
+hence:
+
+\[
+{\bf z}=x_{1}\quad\Rightarrow\quad H(t,{\bf x})=\left[\begin{array}{cc}
+1 & 0\end{array}\right]
+\]
+
+The ground truth of the system is synthesized by analytically solving
+(\ref{eq:dynamics}) and adding zero-mean Gaussian noise to the velocity
+(which in-turn affects the position), while the measurements where
+synthesized by adding zero-mean Gaussian noise to the position ground
+truth.
+\end{document}
