@@ -1,53 +1,59 @@
-function EKF = estimate(EKF, t_vec, Y0, P0)
+function obj = estimate(obj, t_vec, Y0, P0)
+% ESTIMATE(ekf, t_vec, Y0, P0) estimates the states of ekf object for the
+% time instants indicated by t_vec in a post-processing manner, i.e. the
+% measurements are not collected during the estimation process, but are 
+% rather collected before the estimation process.
+%
 % INPUTS
-%   - t_vec: a vector of all
+%   - t_vec: a vector of all the time instants for wich the states need to
+%     be estimated
 %   - Y0: initial guess of the state at time 0
 %   - P0: initial guess of the estimate covarience matrix
 
-if EKF.waitbar
+if obj.waitbar
     bar = waitbar(0, 'Initiating estimation', 'Name', 'Extended Kalman Filter',...
                   'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
     pause(0.2);
     setappdata(bar,'canceling',0);
 end 
 
-EKF.Y         = nan(EKF.n_st, length(t_vec));
-EKF.P         = nan(EKF.n_st, EKF.n_st, length(t_vec));
-EKF.Y(:, 1)   = Y0;
-EKF.P(:, :,1) = P0;
-EKF.t         = t_vec';
+obj.Y         = nan(obj.n_st, length(t_vec));
+obj.P         = nan(obj.n_st, obj.n_st, length(t_vec));
+obj.Y(:, 1)   = Y0;
+obj.P(:, :,1) = P0;
+obj.t         = t_vec';
 n_total       = length(t_vec);
-EKF.z         = cell(1, n_total);
+obj.z         = cell(1, n_total);
 for i = 2:n_total
     t0 = t_vec(i-1);
     t  = t_vec(i);
 
     % Prediction
-    [Y_pred, Phi] = EKF.st_model(t0, t, EKF.Y(:, i-1), EKF.P(:, :, i-1));
-    if isa(EKF.Q, 'function_handle')
-        Q = EKF.Q(t, Y_pred);
-    elseif isa(EKF.Q, 'double')
-        Q = EKF.Q;
+    [Y_pred, Phi] = obj.st_model(t0, t, obj.Y(:, i-1), obj.P(:, :, i-1));
+    if isa(obj.Q, 'function_handle')
+        Q = obj.Q(t, Y_pred);
+    elseif isa(obj.Q, 'double')
+        Q = obj.Q;
     else
         error('EKF.Q must be either a constant matrix or a callable(t, Y)');
     end
-    P_pred = Phi * EKF.P(:, :, i-1) * Phi';
-    [Y_pred, P_pred] = EKF.aux_pred(Y_pred, P_pred);
+    P_pred = Phi * obj.P(:, :, i-1) * Phi';
+    [Y_pred, P_pred] = obj.aux_pred(Y_pred, P_pred);
     P_pred = P_pred + Q;
 
     % Correction
-    z               = EKF.meas(t);
-    EKF.z{i}        = z;
+    z               = obj.meas(t);
+    obj.z{i}        = z;
     if isempty(z)
-        EKF.Y(:, i)     = Y_pred;
-        EKF.P(:, :, i)  = P_pred;
+        obj.Y(:, i)     = Y_pred;
+        obj.P(:, :, i)  = P_pred;
     else
-        [h, H, z] = EKF.meas_model(t, Y_pred, P_pred, z);
+        [h, H, z] = obj.meas_model(t, Y_pred, P_pred, z);
 
-        if isa(EKF.R, 'function_handle')
-            R = EKF.R(t, z);
-        elseif isa(EKF.R, 'double')
-            R = EKF.R;
+        if isa(obj.R, 'function_handle')
+            R = obj.R(t, z);
+        elseif isa(obj.R, 'double')
+            R = obj.R;
         else
             error('EKF.R must be either a constant matrix or a callable(t, z)');
         end
@@ -56,19 +62,19 @@ for i = 2:n_total
         
         K                = P_pred * H' / S;
         Y_corr           = Y_pred + K * meas_res;
-        P_corr           = (eye(EKF.n_st) - K*H) * P_pred;
-        [Y_corr, P_corr] = EKF.aux_corr(Y_corr, P_corr);
-        EKF.Y(:, i)      = Y_corr;
-        EKF.P(:, :, i)   = P_corr;
+        P_corr           = (eye(obj.n_st) - K*H) * P_pred;
+        [Y_corr, P_corr] = obj.aux_corr(Y_corr, P_corr);
+        obj.Y(:, i)      = Y_corr;
+        obj.P(:, :, i)   = P_corr;
     end
-    if EKF.waitbar
+    if obj.waitbar
         if getappdata(bar,'canceling')
             break
         end
         waitbar(i/n_total, bar, 'Estimating...')
     end
 end
-if EKF.waitbar
+if obj.waitbar
     waitbar(1, bar, 'Estimation over')
     pause(0.2);
     delete(bar);

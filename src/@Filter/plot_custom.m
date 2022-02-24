@@ -1,12 +1,21 @@
 function [] = plot_custom(obj, fun, x_vec, opts, varargin)
-% SCATTER_CUSTOM scatters a custom function of the states in the obj object
+% PLOT_CUSTOM plots a custom function of the attributes in the obj object
+% 
 % INPUTS:
 %   - fun(obj): a custom function that handles the data in obj object and
 %               returns a vector of the length as x_vec
 %   - x_vec: The x-coordinate vector (if empty, the default is the time
 %            vector inside the obj object
-%   - opts: Options of the plot
+%   - opts (optional): A cell array that contains the options of the plot.
+%       Options should be passed as opts = {'property', value}. The set of
+%       properties that can be passed are:
+%           - 'ylabel' / 'legend', value (cell array of strings): specifies
+%             the ylabels for the subplots or the legends for lines on one 
+%             axis or the legends for
+%           - ylim, value (array): specifies the ylim of the axis/axes.
 %   - varargin: (optional) scatter options (e.g 'LineWidth', 1.5)
+% 
+% Copyrights: Ahmed Mahfouz 2022, University of Luxembourg.
 
 
 ylabels = [];

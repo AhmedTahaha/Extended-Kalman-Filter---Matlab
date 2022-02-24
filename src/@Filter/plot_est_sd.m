@@ -1,13 +1,24 @@
 function [] = plot_est_sd(obj, states, x_vec, opts, varargin)
-% SCATTER_STATES plots/scatters the chosed estimated states 
-
+% PLOT_EST_SD plots the chosed estimated standard deviation at each
+% iteration
+% 
 % INPUTS:
 %   - states: Indices of states that we want to draw the estimation error
 %             for
 %   - x_vec: The x-coordinate vector (if empty, the default is the time
 %            vector inside the obj object
-%   - opts: Options of the plot
+%   - opts (optional): A cell array that contains the options of the plot.
+%       Options should be passed as opts = {'property', value}. The set of
+%       properties that can be passed are:
+%           - 'OneAxis', value(boolean): specifies whether to stack all 
+%             the plots on one axis or create subplots.
+%           - 'ylabel' / 'legend', value (cell array of strings): specifies
+%             the ylabels for the subplots or the legends for lines on one 
+%             axis or the legends for
+%           - ylim, value (array): specifies the ylim of the axis/axes.
 %   - varargin: (optional) plot options (e.g 'LineWidth', 1.5)
+%
+% Copyrights: Ahmed Mahfouz 2022, University of Luxembourg.
 
 n_states = length(states);
 legends = cell(1, n_states);

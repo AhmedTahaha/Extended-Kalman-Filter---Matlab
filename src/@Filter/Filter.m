@@ -1,8 +1,8 @@
 classdef Filter < handle
-    % Filter class provides some visualization features for state
-    % estimation filters
+    % Filter class provides visualization features for state estimation
+    % filters in a post-processing manner
     %
-    % Copyrights: Ahmed Mahfouz 2021, University of Luxembourg.
+    % Copyrights: Ahmed Mahfouz 2022, University of Luxembourg.
     
     properties
         n_st        % number of states

@@ -1,41 +1,40 @@
 classdef EKF < Filter
-    % EKF is an Extended Kalman Filter class which is able to estimate the
-    % states using the Extended Kalman Filter algorithm. It also provides
-    % some visualization features.
-    %
-    % Copyrights: Ahmed Mahfouz 2021, University of Luxembourg.
+% EKF is an Extended Kalman Filter class which is able to estimate the
+% states using the Extended Kalman Filter algorithm.
+%
+% Use EKF() to Construct an instance of the Extended Kalman Filter class
+% 
+% INPUTS
+%   - n_st: number of state variables to be estimated
+%   - [Y(k), STM] = st_model(t(k-1), t(k), Y(k-1), P(k-1)): is 
+%     a propagating function. The output of this function must
+%     be [Y(t), STM] where STM is the state transition matrix between the 
+%     two time instants (t(k-1)) and (t(k))
+%   - z = meas(t): a function that returns the measurement vector at time 
+%     t(k).
+%   - [h, H, z] = meas_model(t,Y, z): is the measurement model 
+%     function. The output must be the vector h of modeled 
+%     measurements, the matrix H which is dh/dY, and optionally
+%     the measrement vector after removing outlaiar measuremets.
+%   - Q: state model covarience matrix (constant or callable),
+%     Q(t, Y_pred)
+%   - R: measurement covarience matrix (constant or callable),
+%     Q(t, Y_pred)
+% 
+% Copyrights: Ahmed Mahfouz 2022, University of Luxembourg.
     
     properties
-        z           % measurements
+        z           % Measurements (Cell array of all measurements)
         P           % Estimation covariance matrix
         st_model    % state model
         meas_model  % measurement model
         meas        % A function that produces the measurements at any time
-        aux_pred    % Auxiliary function to be run after the prediction step
-        aux_corr    % Auxiliary function to be run after the correction step
+        aux_pred    % Auxiliary function to be run after the prediction step (Callable)
+        aux_corr    % Auxiliary function to be run after the correction step (Callable)
     end
     
     methods
-        function obj = EKF(n_st, st_model, meas_model, meas, Q, R)
-            %EKF Construct an instance of the Extended Kalman Filter class
-            % INPUTS
-            %   - n_st: number of state variables to be estimated
-            %   - [Y(k), Phi] = st_model(t(k-1), t(k), Y(k-1), P(k-1)): is 
-            %     a propagating function. The output of this function must
-            %     be [Y(t), Phi] where Phi is the STM   between the two
-            %     time instants (t(k-1)) and (t(k))
-            %   - z = meas(t): a function that returns the measurement
-            %     vector at time.
-            %   - [h, H, z] = meas_model(t,Y, z): is the measurement model 
-            %     function. The output must be the vector h of modeled 
-            %     measurements, the matrix H which is dh/dY, and optionally
-            %     the measrement vector after removing outlaiar
-            %     measuremets.
-            %   - Q: state model covarience matrix (constant or callable),
-            %     Q(t, Y_pred)
-            %   - R: measurement covarience matrix (constant or callable),
-            %     Q(t, Y_pred)
-            
+        function obj = EKF(n_st, st_model, meas_model, meas, Q, R)            
             obj.n_st       = n_st;
             obj.st_model   = st_model;
             obj.meas_model = meas_model;
