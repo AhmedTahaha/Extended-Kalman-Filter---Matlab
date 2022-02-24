@@ -107,7 +107,7 @@ else
             hold on
             plot(x_vec,  y_GT, varargin{:});
             hold off
-            legend({'State', 'Ground truth'}, 'interpreter', 'latex');
+            legend({'Estimation', 'Ground truth'}, 'interpreter', 'latex');
         end
         
         obj.set_datetimeTicks(gca, x_vec);
