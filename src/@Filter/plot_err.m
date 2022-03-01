@@ -82,7 +82,11 @@ else
         y_vec = y_vec(cond);
         subplot(n_states, 1, i);
         h = plot(x_vec,  y_vec, varargin{:});
-        sigma_est = obj.show_patch_err(obj.P(i, i, cond), x_vec, showPatch);
+        if showPatch
+            sigma_est = obj.show_patch_err(obj.P(i, i, cond), x_vec, showPatch);
+        else
+            sigma_est = std(y_vec);
+        end
         obj.set_datetimeTicks(gca, x_vec);
         [av, RMS, perc] = obj.set_ylim([], y_vec, sigma_est, ylims);
         uistack(h, 'top');

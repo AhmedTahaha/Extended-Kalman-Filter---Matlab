@@ -55,7 +55,7 @@ if oneAxis
         y_vec = y_vec(cond);
         h     = plot(x_vec,  y_vec, varargin{:});
         if pltGT
-            y_GT  = obj.Y_GT(states(i), :);
+            y_GT  = obj.Y_GT(states(i), cond);
             plot(x_vec,  y_GT, varargin{:});
         end
         uistack(h, 'top');
@@ -103,7 +103,7 @@ else
         h = plot(x_vec,  y_vec, varargin{:});
         
         if pltGT
-            y_GT  = obj.Y_GT(states(i), :);
+            y_GT  = obj.Y_GT(states(i), cond);
             hold on
             plot(x_vec,  y_GT, varargin{:});
             hold off
