@@ -10,3 +10,5 @@ The user has to define the following functions, and then pass them to the class 
     <img src="https://render.githubusercontent.com/render/math?math=${\bf R}(t_{k}, {\bf z}_{k})$">
 
   The EKF class has some visualization cababilities, which are illustrated in the example.
+  
+  [![View Extended-Kalman-Filter---Matlab on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/107410-extended-kalman-filter-matlab)
